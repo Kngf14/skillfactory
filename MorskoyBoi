@@ -78,7 +78,7 @@ class Board:
         for i, row in enumerate(self.field):
             res += f"\n{i + 1} |" + " | ".join(row) + " |"
         if self.hid:
-            res = res.replace("*", "o")
+            res = res.replace("■", "o")
         return res
 
     def out(self, d):
@@ -189,7 +189,7 @@ class User(Player):
 class Game:
     def try_board(self):
         lens = [3, 2, 2, 1, 1, 1, 1]
-        board = Board(size=self.size)
+        board = Board(size = self.size)
         attempts = 0
         for l in lens:
             while True:
@@ -252,18 +252,15 @@ class Game:
             else:
                 print("Ходит компьютер!")
                 repeat = self.ai.move()
-
             if repeat:
                 num -= 1
 
-            if self.ai.board.defeat():
-                self.print_boards()
+            if self.ai.board.count == 7:
                 print("-" * 20)
-                print("Игрок выиграл!")
+                print("Пользователь выиграл!")
                 break
 
-            if self.us.board.defeat():
-                self.print_boards()
+            if self.us.board.count == 7:
                 print("-" * 20)
                 print("Компьютер выиграл!")
                 break
