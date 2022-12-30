@@ -7,7 +7,7 @@ class BoardException(Exception):
     pass
 class BoardOutException(BoardException):
     def __str__(self):
-        return "Вы пытаетесь стрелять в клетку за переделами поля"
+        return "Стреляйте в клетку в переделах поля"
 
 class BoardUsedException(BoardException):
     def __str__(self):
@@ -115,6 +115,9 @@ class Board:
         if self.out(d):
             raise BoardOutException()
 
+        if d in self.used:
+            raise BoardUsedException()
+
         self.used.append(d)
 
         for ship in self.ships:
@@ -123,7 +126,7 @@ class Board:
                 self.field[d.x][d.y] = "x"
                 if ship.lives == 0:
                     self.count += 1
-                    self.contour(ship, verb=True)
+                    self.contour(ship, verb = True)
                     print("Корабль уничтожен")
                     return False
                 else:
@@ -135,7 +138,7 @@ class Board:
         return False
 
     def begin(self):
-        self.busy = []
+        self.used = []
 
     def defeat(self):
         return self.count == len(self.ships)
@@ -172,7 +175,7 @@ class User(Player):
             cords = input("Твой ход: ").split()
 
             if len(cords) != 2:
-                print("Введите 2 координаты")
+                print("Введите 2 координаты через пробел")
                 continue
 
             x, y = cords
