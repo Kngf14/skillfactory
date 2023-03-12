@@ -37,7 +37,7 @@ class Post(models.Model):
     category = models.ManyToManyField(Category, through = 'PostCategory')
 
     def previev(self):
-        return self.text_of_topic()[:125] + '...'
+        return self.text_of_topic()[:125] + '...' if len(self.text) > 124 else self.text
 
     def like(self):
         self.rate_of_post += 1
