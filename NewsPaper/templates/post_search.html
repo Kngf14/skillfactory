@@ -1,0 +1,73 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+<h1>Новости, статьи и обзоры</h1>
+<h3>{{ time_now|date:'d M Y' }}</h3>
+
+<form action="" method="get">
+    {% csrf_token %}
+    {{ filterset.form.as_p }}
+    <input type="submit" value="Поиск">
+</form>
+
+{% if posts %}
+    <table>
+        <tr>
+                <td><p><strong>Type</strong></p></td>
+                <td><p><strong>Дата</strong></p></td>
+                <td><p><strong>Заголовок</strong></p></td>
+                <td><p><strong>Содержание</strong></p></td>
+                <td><p><strong>Рейтинг</strong></p></td>
+                <td><p><strong>Автор</strong></p></td>
+        </tr>
+        {% for post in posts %}
+        <tr>
+            <td>{{ post.var }}</td>
+            <td>{{ post.datetime_of_post|date:'d M Y' }}</td>
+            <td>{{ post.topic |censor }}</td>
+            <td>{{ post.text_of_topic|truncatechars:20 |censor}}</td>
+            <td>{{ post.rate_of_post }}</td>
+            <td>{{ post.author.user }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h1>Новостей нет!</h1>
+{% endif %}
+
+{% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+      {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+<hr>
+<h2>Пользователь: {{ request.user.username }}</h2>
+{% if is_not_author %}
+<button><a href="http://127.0.0.1:8000/sign/upgrade/">Стать автором</a></button>
+{% endif %}
+
+<button><a href="http://127.0.0.1:8000/posts/create/">Создать пост</a></button>
+
+<button><a href="http://127.0.0.1:8000/sign/logout/">Выйти</a></button>
+
+{% endblock content %}
