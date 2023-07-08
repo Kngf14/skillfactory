@@ -18,7 +18,7 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
    class Meta:
-       model = Image
+       model = ImagesOfMountains
        fields = ['data', 'title']
 
 class MountainSerializer(serializers.HyperlinkedModelSerializer):
