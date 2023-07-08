@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-e+e1fx=2&@ppy)z6k$5_dixwjb(h2b^^f(xwcykl=i--_hpm(#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -42,8 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'Sprint',
     'rest_framework',
+    'django_filters',
+    'drf_yasg',
 
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+}
 
 SITE_ID = 1
 
@@ -55,7 +61,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
 ]
 
