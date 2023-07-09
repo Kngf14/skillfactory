@@ -6,10 +6,12 @@ from django_filters import rest_framework
 from .serializers import *
 from .models import *
 
-
 class MountainsViewset(viewsets.ModelViewSet):
     queryset = Mountain.objects.all()
     serializer_class = MountainSerializer
+    permission_classes = [permissions.AllowAny]
+    filter_backends = [rest_framework.DjangoFilterBackend]
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def create(self, request, *args, **kwargs):
         serializer = MountainSerializer(data = request.data)
@@ -25,23 +27,3 @@ class MountainsViewset(viewsets.ModelViewSet):
             return Response({'state': 1, 'message': 'Запись изменена'})
         else:
             return Response({'state': 0, 'message': serializer.error})
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all().order_by('-id')
-    serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny]
-
-class CoordsViewSet(viewsets.ModelViewSet):
-    queryset = Coords.objects.all()
-    serializer_class = CoordsSerializer
-    permission_classes = [permissions.AllowAny]
-
-class ImageViewSet(viewsets.ModelViewSet):
-    queryset = ImagesOfMountains.objects.all().order_by('-data')
-    serializer_class = ImageSerializer
-    permission_classes = [permissions.AllowAny]
-
-class LevelViewSet(viewsets.ModelViewSet):
-    queryset = Level.objects.all()
-    serializer_class = LevelSerializer
-    permission_classes = [permissions.AllowAny]
