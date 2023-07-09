@@ -1,0 +1,29 @@
+[
+  {
+    "beauty_title": "ural",
+    "title": "wow",
+    "other_titles": "lol",
+    "connect": "smth",
+    "add_time": "2023-07-08T22:13:43.248762Z",
+    "user": {
+      "email": "test@exmp.ru",
+      "phone": "89111111111",
+      "fam": "ivanov",
+      "name": "ivan",
+      "otc": "ivanovich"
+    },
+    "level": {
+      "winter": "wt",
+      "spring": "sp",
+      "summer": "sm",
+      "autumn": "au"
+    },
+    "coords": {
+      "latitude": 10,
+      "longitude": 5,
+      "height": 150
+    },
+    "status": "NEW",
+    "imagesofmountains": []
+  }
+]
