@@ -31,12 +31,12 @@ class Mountain(models.Model):
     other_titles = models.CharField(null = True, max_length = 255)
     connect = models.CharField(null = True, max_length = 255)
     add_time = models.DateTimeField(auto_now_add = True)
-    author = models.ForeignKey(User, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
     level = models.ForeignKey(Level, on_delete = models.CASCADE)
     coords = models.ForeignKey(Coords, on_delete = models.CASCADE)
     status = models.CharField(max_length = 3, choices = STATUS, default='NEW')
 
 class ImagesOfMountains(models.Model):
-    mountain = models.ForeignKey(Mountain, on_delete = models.CASCADE, related_name = 'images')
+    mountain = models.ForeignKey(Mountain, on_delete = models.CASCADE, related_name = 'imagesofmountains')
     data = models.URLField()
     title = models.CharField(null = True, max_length = 64)

@@ -16,27 +16,29 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):
        model = Level
        fields = ['winter', 'spring', 'summer', 'autumn']
 
-class ImageSerializer(serializers.HyperlinkedModelSerializer):
+class ImagesOfMountainsSerializer(serializers.ModelSerializer):
+   id = serializers.IntegerField(required = False)
+
    class Meta:
        model = ImagesOfMountains
-       fields = ['data', 'title']
+       fields = ['id', 'data', 'title']
 
 class MountainSerializer(serializers.HyperlinkedModelSerializer):
    user = UserSerializer()
    coords = CoordsSerializer()
    level = LevelSerializer()
-   images = ImageSerializer()
+
 
    class Meta:
        model = Mountain
        fields = ['beauty_title', 'title', 'other_titles', 'connect',
-                 'add_time', 'author', 'level', 'coords', 'status']
+                 'add_time', 'user', 'level', 'coords', 'status', 'imagesofmountains']
 
    def create(self, validated_data):
         user_data = validated_data.pop('user')
         coords_data = validated_data.pop('coords')
         level_data = validated_data.pop('level')
-        imagesofmountains_data = validated_data.pop('images')
+        imagesofmountains_data = validated_data.pop('imagesofmountains')
 
         user_email = user_data.get('email')
         if User.objects.filter(email = user_email).exists():
@@ -51,8 +53,8 @@ class MountainSerializer(serializers.HyperlinkedModelSerializer):
         instance = Mountain.objects.create(user = user, level = level, coords = coords, **validated_data)
         instance.save()
 
-        for image_data in images_data:
-            MountainImage.objects.create(mountain = instance, **image_data)
+        for imagesofmountains in imagesofmountains_data:
+            imagesofmountains.objects.create(mountain = instance, **imagesofmountains_data)
         return instance
 
    def update(self, instance, validated_data):
@@ -72,6 +74,23 @@ class MountainSerializer(serializers.HyperlinkedModelSerializer):
                 level_data = validated_data.pop('level')
                 level.update(level_instance, level_data)
 
+            if 'images' in validated_data:
+                imagesofmountains_data = validated_data.pop('images')
+
+                for imagesofmountains in imagesofmountains_data:
+                    imagesofmountains_id = imagesofmountains.get('id', None)
+                    if imagesofmountains_id:
+                        inv_imagesofmountains = imagesofmountains.objects.get(id = image_id)
+                        inv_imagesofmountains.data = imagesofmountains.get('data', inv_imagesofmountains.data)
+                        inv_imagesofmountains.title = imagesofmountains.get('title', inv_imagesofmountains.title)
+                        inv_imagesofmountains.save()
+                    else:
+                        imagesofmountains.objects.create(mountain = instance, **image)
+
+                imagesofmountains_dict = dict((i.id, i) for i in instance.imagesofmountains.all())
+                if len(imagesofmountains_data) == 0:
+                    for imagesofmountains in imagesofmountains_dict.values():
+                        imagesofmountains.delete()
 
             return super(MountainSerializer, self).update(instance, validated_data)
         raise serializers.ValidationError('Update error. Object status is not <NEW>')
